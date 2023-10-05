@@ -4,7 +4,7 @@ require ("drivers-common-public.global.lib")
 require ("drivers-common-public.global.handlers")
 
 MyEvents = {}
-DriverVersion = "0.1"
+DriverVersion = "0.2"
 
 function OnDriverLateInit (reason)
 	OPC.Debug_Mode(Properties['Debug Mode'])
@@ -246,15 +246,94 @@ function OnServerDataIn(nHandle, strData)
 		Debug("HTML")
 		ResponseContentType = "text/html"
 		ResponseData = Response.Data
+	elseif(Response.ContentType == "TEXT") then
+		Debug("TEXT")
+		ResponseContentType = "text/plain"
+		ResponseData = Response.Data
 	else
 		Debug("ERROR")
-		ResponseContentType = "text/html"
-		ResponseData = "ERROR"
+		ResponseContentType = "text/plain"
+		ResponseData = "Content Type NOT Set, Check ProcessRequest()"
 	end
 	
-	local ResponseHeaders = "HTTP/1.1 200 OK\r\nContent-Length: " .. ResponseData:len() .. "\r\nContent-Type: " .. ResponseContentType .. "\r\n\r\n"
+	local ResponseHeaders = "HTTP/1.0 " .. Response.StatusCode .. " " .. Response.StatusText .."\r\nContent-Length: " .. ResponseData:len() .. "\r\nContent-Type: " .. ResponseContentType .. "\r\n\r\n"
 	C4:ServerSend(nHandle, ResponseHeaders .. ResponseData)
 	C4:ServerCloseClient(nHandle)
+end
+
+function ProcessRequest(QueryParams)
+	local Response = {}
+	Response.ContentType = ""
+	Response.StatusCode = "200"
+	Response.StatusText = "OK"
+	
+	if(QueryParams.url == "favicon.ico") then
+		Response.StatusCode		= "404"
+		Response.StatusText		= "NOT FOUND"
+		Response.ContentType	= "TEXT"
+		Response.Data					= "404 FILE NOT FOUND"
+		return Response
+	end
+	
+	if(QueryParams.pw ~= nil) then
+		Debug("Set PW: " .. Properties["Password"])
+		Debug("Request PW: " .. QueryParams.pw)
+	end
+	
+	if(QueryParams.pw ~= Properties["Password"]) then
+		DebugHeader("INVALID PASSWORD")
+		Response.StatusCode		= "403"
+		Response.StatusText		= "FORBIDDEN"
+		Response.ContentType	= "TEXT"
+		Response.Data					= "NOT AUTHORIZED"
+		return Response
+	end
+	
+	if(QueryParams.url == string.lower("GetCommandsXML")) then
+		Response.ContentType = "XML"
+		Response.Data = GetCommandsXML()
+	elseif(QueryParams.url == string.lower("GetCommandsHTML")) then
+		Response.ContentType = "HTML"
+		Response.Data = GetCommandsHTML()
+	elseif(QueryParams.url == string.lower("GetCommands")) then
+		Response.ContentType = "JSON"
+		Response.Data = GetDevices()
+	elseif(QueryParams.url == string.lower("GetVariable")) then
+		Response.ContentType = "JSON"
+		Response.Data = {}
+		Response.Data.DeviceID = QueryParams.deviceid
+		Response.Data.VariableID = QueryParams.variableid
+		Response.Data.VariableName = GetVariableName(Response.Data.DeviceID, Response.Data.VariableID)
+		Response.Data.Value = GetVariable(Response.Data.DeviceID, Response.Data.VariableID)
+	elseif(QueryParams.url == string.lower("SetVariable")) then
+		Response.ContentType = "JSON"
+		
+		Response.Data = {}
+		Response.Data.DeviceID = QueryParams.deviceid
+		Response.Data.VariableID = QueryParams.variableid
+		Response.Data.VariableName = GetVariableName(Response.Data.DeviceID, Response.Data.VariableID)
+		SetVariable(Response.Data.DeviceID, Response.Data.VariableID, QueryParams.newvalue)
+		Response.Data.Value = GetVariable(Response.Data.DeviceID, Response.Data.VariableID)
+	elseif(QueryParams.url == string.lower("FireEvent")) then
+		Response.ContentType = "JSON"
+		Response.Data = {}
+		Response.Data.EventID = QueryParams.eventid
+		C4:FireEventByID(Response.Data.EventID);
+	elseif(QueryParams.url == string.lower("SendCommand")) then
+		Response.ContentType = "JSON"
+		
+		Response.Data = {}
+		Response.Data.DeviceID = QueryParams.deviceid
+		Response.Data.CommandName = QueryParams.commandname
+		Response.Data.CommandArgs = C4:JsonDecode(C4:Base64Decode(QueryParams.commandargs))
+		C4:SendToDevice(Response.Data.DeviceID, Response.Data.CommandName,{})
+	else
+		Response.StatusCode		= "404"
+		Response.StatusText		= "NOT FOUND"
+		Response.ContentType	= "TEXT"
+		Response.Data					= "404 FILE NOT FOUND"
+	end
+	return Response
 end
 
 function DecodeURL(str)
@@ -295,69 +374,6 @@ function ParseRequest(recRequest)
 	return QueryParams
 end
 
-function ProcessRequest(QueryParams)
-	local Response = {}
-	Response.ContentType = ""
-	
-	if(QueryParams.pw~= nil) then
-		Debug("Set PW: " .. Properties["Password"])
-		Debug("Request PW: " .. QueryParams.pw)
-	end
-	if(QueryParams.pw ~= Properties["Password"]) then
-		DebugHeader("INVALID PASSWORD")
-		Response.Success = false
-		Response.Reason = "NOT AUTHORIZED"
-		return C4:JsonEncode(Response, true, true)
-	end
-	
-	if(QueryParams.url == string.lower("GetCommandsXML")) then
-		Response.ContentType = "XML"
-		Response.Data = GetCommandsXML()
-		Response.Success = true
-	elseif(QueryParams.url == string.lower("GetCommandsHTML")) then
-		Response.ContentType = "HTML"
-		Response.Data = GetCommandsHTML()
-		Response.Success = true
-	elseif(QueryParams.url == string.lower("GetCommands")) then
-		Response.ContentType = "JSON"
-		Response.Data = GetDevices()
-		Response.Success = true
-	elseif(QueryParams.url == string.lower("GetVariable")) then
-		Response.ContentType = "JSON"
-		Response.Data = {}
-		Response.Data.DeviceID = QueryParams.deviceid
-		Response.Data.VariableID = QueryParams.variableid
-		Response.Data.VariableName = GetVariableName(Response.Data.DeviceID, Response.Data.VariableID)
-		Response.Data.Value = GetVariable(Response.Data.DeviceID, Response.Data.VariableID)
-		Response.Success = true
-	elseif(QueryParams.url == string.lower("SetVariable")) then
-		Response.ContentType = "JSON"
-		
-		Response.Data = {}
-		Response.Data.DeviceID = QueryParams.deviceid
-		Response.Data.VariableID = QueryParams.variableid
-		Response.Data.VariableName = GetVariableName(Response.Data.DeviceID, Response.Data.VariableID)
-		SetVariable(Response.Data.DeviceID, Response.Data.VariableID, QueryParams.newvalue)
-		Response.Data.Value = GetVariable(Response.Data.DeviceID, Response.Data.VariableID)
-		Response.Success = true
-	elseif(QueryParams.url == string.lower("FireEvent")) then
-		Response.ContentType = "JSON"
-		Response.Data = {}
-		Response.Data.EventID = QueryParams.eventid
-		C4:FireEventByID(Response.Data.EventID);
-		Response.Success = true
-	elseif(QueryParams.url == string.lower("SendCommand")) then
-		Response.ContentType = "JSON"
-		
-		Response.Data = {}
-		Response.Data.DeviceID = QueryParams.deviceid
-		Response.Data.CommandName = QueryParams.commandname
-		Response.Data.CommandArgs = C4:JsonDecode(C4:Base64Decode(QueryParams.commandargs))
-		C4:SendToDevice(Response.Data.DeviceID, Response.Data.CommandName,{})
-		Response.Success = true
-	end
-	return Response
-end
 
 function GetCommandsXML()
 	local Devices = GetDevices()
