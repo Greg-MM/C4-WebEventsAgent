@@ -1,0 +1,33 @@
+table.darkTable {
+  border: 2px solid #000000;
+  background-color: #CBCBCB;
+  width: 100%;
+  height: 200px;
+  text-align: center;
+}
+table.darkTable td, table.darkTable th {
+  border: 1px solid #4A4A4A;
+  padding: 3px 2px;
+}
+table.darkTable tr:nth-child(even) {
+  background: #A7A7A7;
+}
+table.darkTable thead {
+  background: #570E0E;
+}
+table.darkTable thead th {
+  font-size: 15px;
+  font-weight: bold;
+  color: #FFFFFF;
+  text-align: center;
+}
+table.darkTable tfoot {
+  font-size: 12px;
+  font-weight: bold;
+  color: #E6E6E6;
+  background: #000000;
+  border-top: 1px solid #4A4A4A;
+}
+table.darkTable tfoot td {
+  font-size: 12px;
+}

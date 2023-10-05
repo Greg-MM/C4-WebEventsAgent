@@ -1,0 +1,201 @@
+<devicedata>
+	<version>1</version>
+	<manufacturer>GMC4</manufacturer>
+	<model>Web Events Agent</model>
+	<creator>Greg Moerler</creator>
+	<name>Web Events Agent</name>
+	<small>devices_sm/C4.gif</small>
+	<large>devices_lg/C4.gif</large>
+	<control>lua_gen</control>
+	<controlmethod>ip</controlmethod>
+	<driver>DriverWorks</driver>
+	<copyright>Copyright 2004-2014 Control4 Corporation.  All rights reserved.</copyright>
+	<created></created>
+	<modified>11/03/2022 6:21 PM</modified>
+	<agent>true</agent>
+	<combo>true</combo>
+	<proxies>
+	<proxy>WebEventsAgent</proxy>
+	</proxies>
+	<config>
+		<script file="driver.lua"></script>
+		<documentation file="www/documentation/index.html"/>
+		<properties>
+			<property>
+				<name>Driver Version</name>
+				<default>0.0</default>
+				<type>STRING</type>
+				<readonly>true</readonly>
+			</property>
+			<property>
+				<name>Debug Mode</name>
+				<type>LIST</type>
+				<readonly>false</readonly>
+				<default>Off</default>
+				<items>
+					<item>Off</item>
+					<item>Print</item>
+				</items>
+			</property>
+			<property>
+				<name>Server Mode</name>
+				<type>LIST</type>
+				<readonly>false</readonly>
+				<default>HTTPS</default>
+				<items>
+					<item>HTTP</item>
+					<item>HTTPS</item>
+				</items>
+			</property>
+			<property>
+				<name>Port</name>
+				<type>RANGED_INTEGER</type>
+				<minimum>1024</minimum>
+				<maximum>65535</maximum>
+				<default>3434</default>
+				<readonly>false</readonly>
+				<tooltip>Port used to listen for web connections</tooltip>
+			</property>
+			<property>
+				<name>Password</name>
+				<default></default>
+				<type>STRING</type>
+				<readonly>false</readonly>
+			</property>
+			<property>
+				<name>TLS - Certificate</name>
+				<default>-----BEGIN CERTIFICATE-----
+MIIDvDCCAqSgAwIBAgIULhCiB3Ibx4EinL1o015xyP/3t8kwDQYJKoZIhvcNAQEL
+BQAwSDEXMBUGA1UEAwwOV2ViRXZlbnRzQWdlbnQxCzAJBgNVBAYTAlVTMREwDwYD
+VQQIDAhOZXcgWW9yazENMAsGA1UECgwER01DNDAgFw0yMjExMDQwMDUwNDlaGA8y
+MDcyMTAyMjAwNTA0OVowSDEXMBUGA1UEAwwOV2ViRXZlbnRzQWdlbnQxCzAJBgNV
+BAYTAlVTMREwDwYDVQQIDAhOZXcgWW9yazENMAsGA1UECgwER01DNDCCASIwDQYJ
+KoZIhvcNAQEBBQADggEPADCCAQoCggEBAOV84LL0IW8KI09GBeR3Bb4AzKod78hI
+7PQXdcdIvLBgrqHW3xpkLqj50u9/ZNjq14h7EOHH5TH3EeWBJU3eWMoJCM9cYCX+
+9qRMOdNs79ecDDZjCjnkMfEStjwwas52ix2rboWC3qhilkUaOxc1zjuguIEjZxxM
+VwrHO1BABklT/Z2YpY2kQ6dINwsYGQGORdewOwJ6DIRxUSjYRezOEfMaBVKd0CQN
+oSTdGeGTjAYqZSprnmBMc1gjAOaDLCQx0H7vujafKdPDatnRAXlDEbWOuJ0ZEIxP
+P5lRoJjnske7y3np3RKMsPqDYy8SERFxx7ODfOeVwVwaN5ntNr8OJeECAwEAAaOB
+mzCBmDAdBgNVHQ4EFgQU6kbxXDJS1DsWGEqJtFVo22qgirAwHwYDVR0jBBgwFoAU
+6kbxXDJS1DsWGEqJtFVo22qgirAwDgYDVR0PAQH/BAQDAgWgMCAGA1UdJQEB/wQW
+MBQGCCsGAQUFBwMBBggrBgEFBQcDAjAkBgNVHREEHTAbghlXZWJFdmVudHNBZ2Vu
+dC5TZWxmU2lnbmVkMA0GCSqGSIb3DQEBCwUAA4IBAQDSr/ygS3M4OLGpl3adCHpA
+JWOObTTUWAY+hvX1FrZLABysI2Bvcu7Bdk1Y+0yu6EBiuWPDclHUwCTRk/CzR/4r
+WeUVzd0nv2aNhoRd2GDDFUTfCFQrawD0Pm86lDqLoZg55uP02ivuoI5jjC6WgUi6
+aVuQKNoQ4mIpaX4jQZCgp9pfYK+JWrLA/w2w+S7Zt39Xut2jNnqvItTQMd5cVZNQ
+H/uYGmSdZR5APo4vSW69b9waRTdIOqBkdM9Zqgt+tWk6dvE/1NHR5WWtBlyAjClF
+mWmsv95VOsVP55jSp+LLkkkjlTxw6InWo027yH3bxO5l+Ogc1BLyyf6vgEgKSKf3
+-----END CERTIFICATE-----</default>
+				<type>STRING</type>
+				<readonly>false</readonly>
+			</property>
+			<property>
+				<name>TLS - Private Key</name>
+				<default>-----BEGIN PRIVATE KEY-----
+MIIEvQIBADANBgkqhkiG9w0BAQEFAASCBKcwggSjAgEAAoIBAQDlfOCy9CFvCiNP
+RgXkdwW+AMyqHe/ISOz0F3XHSLywYK6h1t8aZC6o+dLvf2TY6teIexDhx+Ux9xHl
+gSVN3ljKCQjPXGAl/vakTDnTbO/XnAw2Ywo55DHxErY8MGrOdosdq26Fgt6oYpZF
+GjsXNc47oLiBI2ccTFcKxztQQAZJU/2dmKWNpEOnSDcLGBkBjkXXsDsCegyEcVEo
+2EXszhHzGgVSndAkDaEk3Rnhk4wGKmUqa55gTHNYIwDmgywkMdB+77o2nynTw2rZ
+0QF5QxG1jridGRCMTz+ZUaCY57JHu8t56d0SjLD6g2MvEhERccezg3znlcFcGjeZ
+7Ta/DiXhAgMBAAECggEAJM1oA4rfKb2IeBgUrdTgmN3r9IQkhgwb4/E3NCRYDjkT
+CGU7FjJmwTZ/O2VEuPzAX+TMikjSWrbyqcmSP/CecJgOT6LS0IUY7LREucFInV0r
+IDW12B7eW3jSvMhO+JlOKg3qBYM9TeexjZdtToWUcz+NFzikOoeLlfDpdC8wUuXV
+jz8RR5QsJu52ZWQKgl+OYdBqu6ArsIu8smB0HgAVh/TSGKt+EDMRSjjwAKGjxSza
+4Sv8Pm63HEVHU+cOjQjM8Edlxf4/Of7nyFpeU3bDCYWJlIPmpRCjsfmT8i4MOlUA
+avcNdTUmrbEUeKDlZdQj3Cr4D0yBv4NhXhiTd5zigQKBgQD2yCcoKP3YOpjEPsnR
+N4LlTjssybh7UZFGImHxBttofAUj9LnpJFwl0Av3GyqAwmlImIrNfT2moFTKIkaE
+/ypAZ6W9w80YCSW8Iyi6inCyEv+mBvZguxLbAVGVrbi631e8bQL2QHZt7YfsUbgy
+qfdz0NXFzVMbtmAzlT03i9NdyQKBgQDuD1nNH+0D1BfpLioizde4YudgpbXw28kq
+TD5YcYNPSrFzYSoI6YyE5ZgJKUNHmnPlbFifI2M8GzlyURzhHSdG/c13z5+FlRML
+JRd6YWxA7/Qt3amZucXAjb0ofrG1fId06lOsTpbGtUzdLKBofrn1LM2qxWJV2dMh
+pmyiS4ezWQKBgQDUaPjTJ10+tUjyeTzKuKYQ6uIiLcp9UnrhTAzTIdzONRlTlnxC
+gQpTfZwe6CIQS8XFN48ZSfg7qHrytMfQB7T9VHkjOhoY2x7Ard6LmUdg7ttes1Vz
+cvHK0XrAg5OiPUTOKWJIRLnq6m146enKqeMUq6akp5MmIjbxjz3uxop6iQKBgH0I
+WP0QeJbbLZfOJFlVTajNYYL0ZgPUG+r4UoJ3VCUwMNVNwhseNyyRvfGJ14ljCN4F
+suIaXwNxtRFios1lV3zEzsbPqJQrgO4IlDU1t/q/TLtOQca4uLFygFglesa8WhTB
+AiNsv2osTOuZhcJ8VMT9vCOmOginOGnjFAmFrAc5AoGAJBrTNwk4X3PvKx+J5sxY
+HJT3hL56kBDRVLIKtQGOM4EIU4ukKbxuqHcNGp9Jv900rzTdDN/x1ohohvhUkx94
+a3Lj8dVoognLbw7oNowpMgHjRaC3+whZ0PteOm4MMDy6eUxe5ycN1bVB4apQtRzf
+QZ3hyruutI87pPqcbmipzvU=
+-----END PRIVATE KEY-----</default>
+				<type>STRING</type>
+				<readonly>false</readonly>
+			</property>
+			<property>
+				<name>Get Commands (JSON)</name>
+				<type>LINK</type>
+				<tooltip>JSON Command List</tooltip>
+				<default>http://www.control4.com</default>
+			</property>
+			<property>
+				<name>Get Commands (XML)</name>
+				<type>LINK</type>
+				<tooltip>JSON Command List</tooltip>
+				<default>http://www.control4.com</default>
+			</property>
+			<property>
+				<name>Get Commands (HTML)</name>
+				<type>LINK</type>
+				<tooltip>JSON Command List</tooltip>
+				<default>http://www.control4.com</default>
+			</property>
+		</properties>
+		<actions>
+			<action>
+				<name>Show Events (Check LUA Tab)</name>
+				<command>ShowEvents</command>
+			</action>
+			<action>
+				<name>Delete Event</name>
+				<command>DeleteEvent</command>
+				<params>
+					<param>
+						<name>EventID</name>
+						<type>RANGED_INTEGER</type>
+						<default>1</default>
+						<minimum>1</minimum>
+						<maximum>5000000</maximum>
+					</param>
+				</params>
+			</action>
+			<action>
+				<name>Create Event</name>
+				<command>CreateEvent</command>
+				<params>
+					<param>
+						<name>EventID</name>
+						<type>RANGED_INTEGER</type>
+						<default>1</default>
+						<minimum>1</minimum>
+						<maximum>5000000</maximum>
+					</param>
+					<param>
+						<name>EventName</name>
+						<type>STRING</type>
+						<default></default>
+					</param>
+					<param>
+						<name>EventDescription</name>
+						<type>STRING</type>
+						<default></default>
+					</param>
+				</params>
+			</action>
+		</actions>
+		<commands>
+			<command>
+			<name>Execute Event</name>
+			<description>Execute Event PARAM1</description>
+			<params>
+					<param>
+							<name>Event</name>
+							<type>DYNAMIC_LIST</type>
+					</param>
+			</params>
+			</command>
+		</commands>
+	</config>
+	<connections></connections>
+	<capabilities></capabilities>
+</devicedata>
